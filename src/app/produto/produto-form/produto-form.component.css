@@ -1,0 +1,28 @@
+.p-card-custom {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.p-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 1rem;
+}
+
+.p-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.p-inputtext {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.p-d-block {
+    display: block;
+    margin-bottom: 0.5rem;
+}

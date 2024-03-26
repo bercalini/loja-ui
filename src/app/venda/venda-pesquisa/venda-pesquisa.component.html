@@ -1,0 +1,89 @@
+<div class="container">
+    <br>
+    <p-card header="Listagem de venda">
+
+        <p-toolbar styleClass="mb-4 gap-2">
+            <ng-template pTemplate="left">
+                <button pButton pRipple label="Nova venda" icon="pi pi-plus" class="p-button-success mr-2" routerLink="/venda-cadastro" ></button>
+            </ng-template>
+            <ng-template pTemplate="right">    
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" #textInput (input)="dt1.filterGlobal(textInput.value, 'contains')" 
+                    placeholder="Filtro Global"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+            </ng-template>
+        </p-toolbar>        
+
+        <p-table [value]="vendas" [tableStyle]="{ 'min-width': '50rem' }"
+    #dt1
+    dataKey="id"
+    [paginator]="true"
+    [rows]="5"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="venda {first} a {last} de {totalRecords} vendas"
+    [rowsPerPageOptions]="[5, 10, 20]"
+    [globalFilterFields]="['id', 'valorTotal', 'dataVenda', 'cliente.nome']">
+    <ng-template pTemplate="header">
+        <tr style="background-color: red;">
+            <th pSortableColumn="id">Id<p-sortIcon field="id"></p-sortIcon></th>
+            <th pSortableColumn="nome">Valor<p-sortIcon field="valorTotal"></p-sortIcon></th>
+            <th pSortableColumn="email">Data<p-sortIcon field="dataVenda"></p-sortIcon></th>
+            <th pSortableColumn="situacao">Cliente<p-sortIcon field="cliente.nome"></p-sortIcon></th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-venda let-even="even" let-odd="odd">
+        <tr [pSelectableRow]="venda" [ngClass]="{ 'zebrado-venda': even }">
+            <td>{{ venda.id }}</td>
+            <td>{{ venda.valorTotal | currency:'BRL':'symbol':'1.2-2' }}</td>
+            <td>{{ venda.dataVenda }}</td>
+            <td>{{ venda.cliente.nome }}</td>
+        </tr>
+
+        <tr *ngIf="venda.itensVenda && venda.itensVenda.length">
+            <td colspan="4">
+                <p-table [value]="venda.itensVenda" [autoLayout]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Produto</th>
+                            <th>Valor</th>
+                            <th>Quantidade</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-itemVenda let-even="even" let-odd="odd">
+                        <tr [ngClass]="{ 'zebrado-item-venda': even }">
+                            <td>{{ itemVenda.produto.nome }}</td>
+                            <td>{{ itemVenda.valorProduto | currency:'BRL':'symbol':'1.2-2'}}</td>
+                            <td>{{ itemVenda.quantidadeProduto }}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </td>
+        </tr>
+
+        <tr *ngIf="venda.pagamentosVenda && venda.pagamentosVenda.length">
+            <td colspan="4">
+                <p-table [value]="venda.pagamentosVenda" [autoLayout]="true">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Pagamento</th>
+                            <th>Valor</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-itemPagamento let-even="even" let-odd="odd">
+                        <tr [ngClass]="{ 'zebrado-pagamento-venda': even }">
+                            <td>{{ itemPagamento.nome }}</td>
+                            <td>{{ itemPagamento.valorPago | currency:'BRL':'symbol':'1.2-2'}}</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </td>
+        </tr>
+    </ng-template>
+    </p-table>
+
+
+    </p-card>
+
+    <p-toast></p-toast>
+   
+</div>

@@ -1,0 +1,45 @@
+<div class="container">
+    <form #usuarioForm="ngForm" (ngSubmit)="onSubmit()">
+        <br>
+        <p-card [header]="!id ? 'Cadastro de Usuario' : 'Editar Usuario'">
+            
+            <div class="formgrid grid">
+                <div class="field col-12 md:col-12">
+                    <label >Nome completo</label>
+                    <input type="text" [(ngModel)]="usuario.nome" id="nome" name="nome"
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+                </div>
+                <div class="field col-12 md:col-12">
+                    <label >Email</label>
+                    <input type="text" [(ngModel)]="usuario.email" id="email" name="email"
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label >Senha</label>
+                    <input type="password" [(ngModel)]="usuario.senha" id="senha" name="senha"
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+                </div>
+                <div class="field col-12 md:col-6">
+                    <label >Confirmar Senha</label>
+                    <input type="password" [(ngModel)]="confirmarSenha" id="confirmarSenha" name="confirmarSenha"
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+                </div>
+            </div>
+
+            <br>
+
+            <div class="formgrid grid">
+                <div class="field col-12 md:col-3">
+                    <button pButton [label]="!id ? 'Cadastro de Usuario' : 'Editar Usuario'" type="submit" pRipple icon="pi pi-check" iconPos="right" class="p-button-success"></button>
+                </div>
+                <div class="field col-12 md:col-3">
+                    <p-button type="reset" label="Limpar Formulario" severity="warning" icon="pi pi-times" iconPos="right"></p-button>
+                </div>
+                <div class="field col-12 md:col-3">
+                    <a routerLink="/usuario-pesquisa">Voltar para lista de Usuario</a>
+                </div>
+            </div>
+        </p-card>
+        <p-toast></p-toast>
+    </form>   
+</div>

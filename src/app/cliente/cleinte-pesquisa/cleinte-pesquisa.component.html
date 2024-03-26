@@ -1,0 +1,75 @@
+<div class="container">
+    <br>
+    <p-card header="Listagem de cliente">
+
+        <p-toolbar styleClass="mb-4 gap-2">
+            <ng-template pTemplate="left">
+                <button pButton pRipple label="Novo" icon="pi pi-plus" class="p-button-success mr-2" routerLink="/cliente-cadastro" ></button>
+                
+                <button pButton pRipple label="Editar" icon="pi pi-pencil"  class="mr-2 inline-block" (click)="editar()" ></button>
+                
+                <button pButton pRipple label="Excluir" icon="pi pi-trash"
+                    (click)="confirm()"  
+                    class="p-button-danger" >
+                </button>
+            
+            </ng-template>
+            <ng-template pTemplate="right">    
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" #textInput (input)="dt1.filterGlobal(textInput.value, 'contains')" 
+                    placeholder="Filtro Global"
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+            </ng-template>
+        </p-toolbar>        
+
+        <p-table [value]="clientes" [tableStyle]="{ 'min-width': '50rem' }"
+            #dt1
+            dataKey="id"
+            [paginator]="true"
+            [rows]="5"
+            [showCurrentPageReport]="true"
+            currentPageReportTemplate="cliente {first} a {last} de {totalRecords} clientes"
+            [rowsPerPageOptions]="[5, 10, 20]"
+            [globalFilterFields]="['id', 'nome', 'celular', 'cpf', 'endereco.cidade', 'endereco.estado']"
+            selectionMode="single" [(selection)]="selecionarCliente" dataKey="id">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="id">Id<p-sortIcon field="id"></p-sortIcon></th>
+                    <th pSortableColumn="nome">Nome<p-sortIcon field="nome"></p-sortIcon></th>
+                    <th>Celular</th>
+                    <th>CPF</th>
+                    <th pSortableColumn="endereco.cidade">Cidade<p-sortIcon field="endereco.cidade"></p-sortIcon></th>
+                    <th pSortableColumn="endereco.estado">Estado<p-sortIcon field="cliente.endereco.estado"></p-sortIcon></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-cliente>
+                <tr [pSelectableRow]="cliente">
+                    <td>{{ cliente.id }}</td>
+                    <td>{{ cliente.nome }}</td>
+                    <td><p-tag [value]="cliente.celular" severity="warning"></p-tag></td>
+                    <td><p-tag [value]="cliente.cpf" severity="success"></p-tag></td>
+                    <td>{{ cliente.endereco.cidade }}</td>
+                    <td>{{ cliente.endereco.uf }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-card>
+
+    <p-toast></p-toast>
+
+    <p-confirmDialog #cd>
+        <ng-template pTemplate="headless" let-message>
+            <div class="flex flex-column align-items-center p-5 surface-overlay border-round">
+                <div class="border-circle bg-primary inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8">
+                    <i class="pi pi-question text-5xl"></i>
+                </div>
+                <span class="font-bold text-2xl block mb-2 mt-4">{{ message.header }}</span>
+                <p class="mb-0">{{ message.message }}</p>
+                <div class="flex align-items-center gap-2 mt-4">
+                    <button pButton label="Sim" (click)="cd.accept()" class="w-8rem"></button>
+                    <button pButton label="Não" (click)="cd.reject()" class="p-button-outlined w-8rem "></button>
+                </div>
+            </div>
+        </ng-template>
+    </p-confirmDialog>
+</div>

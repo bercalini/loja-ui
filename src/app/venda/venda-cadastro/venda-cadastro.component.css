@@ -1,0 +1,4 @@
+:host ::ng-deep .custom-header .p-card-header {
+    background-color: green !important;
+    color: white !important;
+  }

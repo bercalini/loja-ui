@@ -1,0 +1,136 @@
+<div>
+    <form #vendaForm="ngForm" (ngSubmit)="onSubmit()">
+    <br>
+    <p-tabView>
+        <p-tabPanel header="Produtos">
+            <p-card header="Realizar venda, Valor total : R$ {{valorTotal}}" [style.color]="'green'">
+                <p-pickList [source]="produtos" [target]="produtosSelecionados" sourceHeader="Produtos" targetHeader="Selecionados" [dragdrop]="true" [responsive]="true" [sourceStyle]="{ height: '30rem' }"
+                    [targetStyle]="{ height: '30rem' }" filterBy="nome" sourceFilterPlaceholder="Pesquise pelo nome" targetFilterPlaceholder="Pesquise pelo nome" breakpoint="1400px"
+                    (onMoveToTarget)="onMoveToTarget($event)" (onMoveToSource)="onMoveToSource($event)">
+                    <ng-template let-produto pTemplate="item">
+                        <div class="flex flex-wrap p-2 align-items-center gap-3">
+                                <div class="flex-1 flex flex-column gap-2">
+                                    <span class="font-bold">{{ produto.nome }}</span>
+                                <div class="flex align-products-center gap-2">
+                                    <i class="pi pi-tag text-sm"></i>
+                                    <span>{{ produto.descricao }}</span>
+                                </div>
+                            </div>
+                            <span class="font-bold text-900">{{ '$' + produto.valor }}</span>
+                            <span style="color: green">{{ 'Estoque ' + produto.quantidadeEstoque }}</span>
+                        </div>
+                    </ng-template>
+                </p-pickList>
+            </p-card>
+        </p-tabPanel>
+        <p-tabPanel header="Pagamento">
+            <p-card header="Valor total da venda : R$ {{valorTotal}} Valor Pago : R$ {{valorPago}}" >
+                <p-carousel [value]="pagamentos" [numVisible]="3" [numScroll]="1" [responsiveOptions]="responsiveOptions">
+                    <ng-template let-pagamento pTemplate="item">
+                        <div class="product-item">
+                            <div class="product-item-content">
+                                <div>
+                                    <h4 class="mb-1">{{ pagamento.nome }}</h4>
+                                        <p-button icon="pi pi-save" [rounded]="true" pTooltip="Adicionar forma de pagamento" tooltipPosition="top" 
+                                            (click)="adicionarPagamneto(pagamento.id)" />
+                                        <p-button icon="pi pi-trash" [rounded]="true" severity="secondary" pTooltip="Remover forma de pagamento" tooltipPosition="top" />
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </p-carousel>
+            </p-card>
+        </p-tabPanel>
+        
+        <p-tabPanel header="Verificar e concluir">
+            <p-card header="Valor total da venda : R$ {{valorTotal}} Valor Pago : R$ {{valorPago}}" >
+                <label>Selecione o cliente</label>
+                <p-dropdown [options]="clientes" [(ngModel)]="selectedCliente" optionLabel="nome" id="clientes" name="clientes"
+                    [showClear]="true" placeholder="Selecione o cliente..."
+                    [filter]="true" filterBy="nome" 
+                    appendTo="body" [style]="{width: '100%', 'margin-top': '10px'}">
+                </p-dropdown>
+            </p-card>
+
+            <br>
+            <br>
+            <h3>Produtos e quantidades</h3>
+            <br>
+            <br>
+
+            <p-table [value]="venda.itensVenda" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>produto</th>
+                        <th>quantidade</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-produto>
+                    <tr>
+                        <td>{{ produto.produtoId }}</td>
+                        <td>{{ produto.quantidade }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+            <br>
+            <br>
+            <h3>Pagamentos e valores</h3>
+            <br>
+            <br>
+
+            <p-table [value]="venda.pagamentosVenda" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Pagamento</th>
+                        <th>Valor</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-pagamento>
+                    <tr>
+                        <td>{{ pagamento.pagamentoId }}</td>
+                        <td>{{ pagamento.valorPago }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <br>
+            <br>
+
+            <button pButton type="submit" icon="pi pi-check" pRipple label="Finalizar compra" class="p-button-success"></button>
+
+        </p-tabPanel>
+    </p-tabView>
+    
+    <p-dialog header="Quantidade desejada" [(visible)]="displayDialog" [modal]="true" [responsive]="true">
+        <p>
+            <label for="quantity">Quantidade:</label>
+            <input type="number" id="quantidade" name="quantidade" pInputNumber [(ngModel)]="quantidadeProduto" [min]="1" [max]="100" />
+        </p>
+        <p-footer>
+            <button pButton type="button" label="Cancelar" (click)="cancelar()" class="p-button-text"></button>
+            <button pButton type="button" label="Adicionar" (click)="adicionarProduto()" ></button>
+        </p-footer>
+    </p-dialog>
+
+    <p-dialog header="Valor da venda R$ {{valorTotal}}" [(visible)]="dialogPagamento" [modal]="true" [responsive]="true">
+            <label for="quantity">Valor:</label>
+            <input style="margin-top: 10;" type="number" id="valorPagamento" name="valorPagamento" pInputNumber [(ngModel)]="valorPagamento" [min]="1" [max]="10000" />
+        <br>
+        <br>
+        <div class="form-group">    
+            <label>Deseja pagar o valor total da venda nesse pagamento? </label>
+            <p-checkbox [(ngModel)]="valorTotalPagamento" id="valorTotalPagamento" name="valorTotalPagamento" [binary]="true" inputId="binary"
+                (click)="verificarPagamento()"  ></p-checkbox>
+        </div>
+        <p-footer>
+            <button pButton type="button" label="Cancelar" (click)="cancelarPagamento()" class="p-button-text"></button>
+            <button pButton type="button" label="Adicionar" (click)="concluirPagamento()" ></button>
+        </p-footer>
+    </p-dialog>
+
+
+    </form>
+    
+    <p-toast></p-toast>
+
+</div>
